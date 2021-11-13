@@ -11,12 +11,6 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-```{r}
-library(usethis)
-
-use_git_config(user.name = "johannaaz", user.email = "johanna.a.ze@gmail.com")
-```
-
 Die Universität St. Gallen sammelt und veröffentlicht Daten zu Konsumausgaben im Rahmen des Projekts [Monitoring Consumption Switzerland](https://monitoringconsumption.com/).
 
 In den folgenden Schritten wird ein Index zu den Konsumausgaben im Kanton Zürich und in der Schweiz erstellt.
