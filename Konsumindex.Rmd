@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 Die Universität St. Gallen sammelt und veröffentlicht Daten zu Konsumausgaben im Rahmen des Projekts [Monitoring Consumption Switzerland](https://monitoringconsumption.com/).
 
-In den folgenden Schritten wird ein Index zu den Konsumausgaben im Kanton Zürich und in der Schweiz erstellt.
+In den folgenden Schritten werden verschiedene Indizes zu den Konsumausgaben im Kanton Zürich und in der Schweiz erstellt.
 
 ```{r packages}
 
@@ -142,9 +142,9 @@ kartenzahlungen_2019 <- filter(kartenzahlungen_reg, grepl("2019", jahrkw))
 kartenzahlungen_2019 <- kartenzahlungen_2019 %>% 
   remove_rownames %>% column_to_rownames(var="jahrkw")
 
-newrow <- summarize_all(kartenzahlungen_2019, mean)
+newrow_k <- summarize_all(kartenzahlungen_2019, mean)
 
-rownames(newrow) <- c("2019-00")
+rownames(newrow_k) <- c("2019-00")
 
 # Einzelne Wochenwere ab 2020 hinzufügen
   
@@ -153,7 +153,7 @@ kartenzahlungen_ab2020 <- filter(kartenzahlungen_reg, !grepl("2019", jahrkw))
 kartenzahlungen_ab2020 <- kartenzahlungen_ab2020 %>% 
   remove_rownames %>% column_to_rownames(var="jahrkw")
 
-kartenzahlungen_index_raw <- rbind(newrow, kartenzahlungen_ab2020)
+kartenzahlungen_index_raw <- rbind(newrow_k, kartenzahlungen_ab2020)
 
 # Index berechnen
 
@@ -164,7 +164,7 @@ kartenzahlungen_index <- rownames_to_column(kartenzahlungen_index, "Kalenderwoch
 
 ```
 
-##### Grafiken erstelln
+##### Grafiken erstellen
 
 ```{r}
 
@@ -235,13 +235,6 @@ kartenzahlungen_index_long %>%
 
 ```
 
-**Fragen an Lars:**  
-**In der ersten Grafik mit allen Grossregionen beginnt das Liniendiagramm immer bei 2019-0 (Indexwert 100).**  
-**Nachdem ich den Filter anwende und nur noch Zürich und die Schweiz in die Grafik nehme, fehlt der erste Datenpunkt bei Zürich.**  
-**Und bei der Schweiz scheint der letzte Datenpunkt zu fehlen. Die Codes für die Diagramme sind sonst aber identisch.**  
-**Woran könnte das liegen?**
-
-
 
 #### 2. Kartenzahlungen im Detailhandel
 
@@ -279,9 +272,9 @@ kartenzahlungen_2019_d <- filter(kartenzahlungen_reg_d, grepl("2019", jahrkw))
 kartenzahlungen_2019_d <- kartenzahlungen_2019_d %>% 
   remove_rownames %>% column_to_rownames(var="jahrkw")
 
-newrow <- summarize_all(kartenzahlungen_2019_d, mean)
+newrow_d <- summarize_all(kartenzahlungen_2019_d, mean)
 
-rownames(newrow) <- c("2019-00")
+rownames(newrow_d) <- c("2019-00")
 
 # Einzelne Wochenwere ab 2020 hinzufügen
   
@@ -290,7 +283,7 @@ kartenzahlungen_ab2020_d <- filter(kartenzahlungen_reg_d, !grepl("2019", jahrkw)
 kartenzahlungen_ab2020_d <- kartenzahlungen_ab2020_d %>% 
   remove_rownames %>% column_to_rownames(var="jahrkw")
 
-kartenzahlungen_index_raw_d <- rbind(newrow, kartenzahlungen_ab2020_d)
+kartenzahlungen_index_raw_d <- rbind(newrow_d, kartenzahlungen_ab2020_d)
 
 # Index berechnen
 
@@ -301,7 +294,7 @@ kartenzahlungen_index_d <- rownames_to_column(kartenzahlungen_index_d, "Kalender
 
 ```
 
-##### Grafiken erstelln
+##### Grafiken erstellen
 
 ```{r}
 
@@ -373,7 +366,7 @@ kartenzahlungen_index_long_d %>%
 ```
 
 
-#### 2. Kartenzahlungen im Gastgewerbe
+#### 3. Kartenzahlungen im Gastgewerbe
 
 ##### Daten filtern
 
@@ -409,9 +402,9 @@ kartenzahlungen_2019_g <- filter(kartenzahlungen_reg_g, grepl("2019", jahrkw))
 kartenzahlungen_2019_g <- kartenzahlungen_2019_g %>% 
   remove_rownames %>% column_to_rownames(var="jahrkw")
 
-newrow <- summarize_all(kartenzahlungen_2019_g, mean)
+newrow_g <- summarize_all(kartenzahlungen_2019_g, mean)
 
-rownames(newrow) <- c("2019-00")
+rownames(newrow_g) <- c("2019-00")
 
 # Einzelne Wochenwere ab 2020 hinzufügen
   
@@ -420,7 +413,7 @@ kartenzahlungen_ab2020_g <- filter(kartenzahlungen_reg_g, !grepl("2019", jahrkw)
 kartenzahlungen_ab2020_g <- kartenzahlungen_ab2020_g %>% 
   remove_rownames %>% column_to_rownames(var="jahrkw")
 
-kartenzahlungen_index_raw_g <- rbind(newrow, kartenzahlungen_ab2020_g)
+kartenzahlungen_index_raw_g <- rbind(newrow_g, kartenzahlungen_ab2020_g)
 
 # Index berechnen
 
@@ -431,7 +424,7 @@ kartenzahlungen_index_g <- rownames_to_column(kartenzahlungen_index_g, "Kalender
 
 ```
 
-##### Grafiken erstelln
+##### Grafiken erstellen
 
 ```{r}
 
@@ -443,7 +436,7 @@ kartenzahlungen_index_long_g <- kartenzahlungen_index_g %>%
 # Grafik mit allen Regionen der Schweiz
 
 ggplot(kartenzahlungen_index_long_g, aes(x=Kalenderwoche, y=Index, group=Region))+
-  geom_line(aes(color=Region),size = 0.8)+
+  geom_step(aes(color=Region),size = 0.8)+
   scale_color_manual(values=c("#57DC79","#36A953","#237739","#6ADC5E","#82B0BE","#A5A5A5","#A0DCAF","#00B0F0"))+
   theme_minimal()+
   geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
@@ -458,7 +451,7 @@ ggplot(kartenzahlungen_index_long_g, aes(x=Kalenderwoche, y=Index, group=Region)
 kartenzahlungen_index_long_g %>%
   filter(Region == c("Schweiz","Zurich")) %>%
   ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
-  geom_line(aes(color=Region), size=1.2)+
+  geom_step(aes(color=Region), size=1.2)+
   scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
   theme_minimal()+
   geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
@@ -474,7 +467,7 @@ kartenzahlungen_index_long_g %>%
   filter(Region == c("Schweiz","Zurich")) %>%
   filter(Kalenderwoche < "2021-01") %>%
   ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
-  geom_line(aes(color=Region), size=1.2)+
+  geom_step(aes(color=Region), size=1.2)+
   scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
   theme_minimal()+
   geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
@@ -490,7 +483,7 @@ kartenzahlungen_index_long_g %>%
   filter(Region == c("Schweiz","Zurich")) %>%
   filter(Kalenderwoche >= "2021-01") %>%
   ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
-  geom_line(aes(color=Region), size=1.2)+
+  geom_step(aes(color=Region), size=1.2)+
   scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
   theme_minimal()+
   geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
@@ -498,6 +491,257 @@ kartenzahlungen_index_long_g %>%
   theme(legend.position = "bottom")+
   labs(title = "Gastroindex 2021",
         subtitle = "Kartenzahlungen im Gastgewerbe, Index 100 = Mittelwert 2019",
+        caption = "Daten: https://monitoringconsumption.com/")
+
+```
+
+
+
+#### 4. Bargeldbezüge
+
+##### Daten filtern
+
+```{r}
+
+# Nur Bargeldbezüge aus der Schweiz herausfiltern und Regionen umbenennen
+
+bargeld_ch <- bargeld %>% 
+  filter(Country == "CHE" & Type == "ATM" & !Region == 99) %>% 
+  mutate(Region=recode(Region,
+                       `1` = "Lake Geneva",
+                       `2` = "Espace Mittelland",
+                       `3` = "Northwestern",
+                       `4` = "Zurich",
+                       `5` = "Eastern", 
+                       `6` = "Central", 
+                       `7` = "Ticino"))
+
+# Kartenzahlungen nach Region und KW
+
+bargeld_reg <- bargeld_ch %>%
+  group_by(Region, jahrkw) %>%
+  summarize(summe = sum(`Amount CHF`)) %>%
+  spread(Region, summe) %>%
+  rowwise() %>%
+  mutate(Schweiz = sum(c_across("Central":"Zurich")))
+
+```
+
+##### Index berechnen
+
+```{r}
+
+# Wochenmittelwert des Jahres 2019 als Referenzwert berechnen
+
+bargeld_2019 <- filter(bargeld_reg, grepl("2019", jahrkw))
+
+bargeld_2019 <- bargeld_2019 %>% 
+  remove_rownames %>% column_to_rownames(var="jahrkw")
+
+newrow_b <- summarize_all(bargeld_2019, mean)
+
+rownames(newrow_b) <- c("2019-00")
+
+# Einzelne Wochenwere ab 2020 hinzufügen
+  
+bargeld_ab2020 <- filter(bargeld_reg, !grepl("2019", jahrkw))
+
+bargeld_ab2020 <- bargeld_ab2020 %>% 
+  remove_rownames %>% column_to_rownames(var="jahrkw")
+
+bargeld_index_raw <- rbind(newrow_b, bargeld_ab2020)
+
+# Index berechnen
+
+bargeld_index <- apply(bargeld_index_raw, 2, function(y) 100 * y / y[1])
+
+bargeld_index <- as.data.frame(bargeld_index)
+bargeld_index <- rownames_to_column(bargeld_index, "Kalenderwoche")
+
+```
+
+##### Grafiken erstellen
+
+```{r}
+
+# Daten zurück in Longformat umwandeln
+
+bargeld_index_long <- bargeld_index %>%
+  gather(`Central`, `Eastern`, `Espace Mittelland`, `Lake Geneva`, `Northwestern`, `Ticino`, `Zurich`, `Schweiz`, key = "Region", value = "Index")
+
+# Grafik mit allen Regionen der Schweiz
+
+ggplot(bargeld_index_long, aes(x=Kalenderwoche, y=Index, group=Region))+
+  geom_line(aes(color=Region),size = 0.8)+
+  scale_color_manual(values=c("#57DC79","#36A953","#237739","#6ADC5E","#82B0BE","#A5A5A5","#A0DCAF","#00B0F0"))+
+  theme_minimal()+
+  geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(legend.position = "bottom")+
+  labs(title = "Bargeldindex",
+        subtitle = "Bargeldbezüge, Index 100 = Mittelwert 2019",
+        caption = "Daten: https://monitoringconsumption.com/")
+
+# Grafik mit ausgewählten Regionen
+
+ bargeld_index_long %>%
+  filter(Region == c("Schweiz","Zurich")) %>%
+  ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
+  geom_line(aes(color=Region), size=1.2)+
+  scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
+  theme_minimal()+
+  geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(legend.position = "bottom")+
+  labs(title = "Bargeldindex",
+        subtitle = "Bargeldbezüge, Index 100 = Mittelwert 2019",
+        caption = "Daten: https://monitoringconsumption.com/")
+
+# Grafik mit Daten für das Jahr 2020
+
+bargeld_index_long %>%
+  filter(Region == c("Schweiz","Zurich")) %>%
+  filter(Kalenderwoche < "2021-01") %>%
+  ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
+  geom_line(aes(color=Region), size=1.2)+
+  scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
+  theme_minimal()+
+  geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(legend.position = "bottom")+
+  labs(title = "Bargeldindex 2020",
+        subtitle = "Bargeldbezüge, Index 100 = Mittelwert 2019",
+        caption = "Daten: https://monitoringconsumption.com/")
+
+# Grafik mit Daten für das Jahr 2021
+
+bargeld_index_long %>%
+  filter(Region == c("Schweiz","Zurich")) %>%
+  filter(Kalenderwoche >= "2021-01") %>%
+  ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
+  geom_line(aes(color=Region), size=1.2)+
+  scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
+  theme_minimal()+
+  geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(legend.position = "bottom")+
+  labs(title = "Bargeldindex 2021",
+        subtitle = "Bargeldbezüge, Index 100 = Mittelwert 2019",
+        caption = "Daten: https://monitoringconsumption.com/")
+
+```
+
+
+#### 5. Konsumindex (Detailhandel und Bargeldbezüge)
+
+##### Daten zusammenführen
+
+```{r}
+
+# Kartenzahlungen im Detailhandel und Bargeldtransaktionen addieren
+
+kartenzahlungen_kw <- rownames_to_column(kartenzahlungen_index_raw, "Kalenderwoche")
+bargeld_kw <- rownames_to_column(bargeld_index_raw, "Kalenderwoche")
+
+konsum_ch <- left_join(kartenzahlungen_kw, bargeld_kw, by="Kalenderwoche")
+
+konsum_ch <- konsum_ch %>% 
+  mutate(Genferseeregion = `Lake Geneva.x`+`Lake Geneva.y`,
+         Mittelland = `Espace Mittelland.x`+`Espace Mittelland.y`,
+         Nordwestschweiz = Northwestern.x + Northwestern.y,
+         Zuerich = Zurich.x + Zurich.y,
+         Ostschweiz = Eastern.x + Eastern.y,
+         Zentralschweiz = Central.x + Central.y,
+         Tessin = Ticino.x + Ticino.y) %>% 
+  select(Kalenderwoche,Genferseeregion:Tessin) %>%  
+  rowwise() %>% 
+  mutate(Schweiz = sum(c_across("Genferseeregion":"Tessin")))
+
+```
+
+##### Index berechnen
+
+```{r}
+
+# Index berechnen
+
+konsum_ch <- konsum_ch %>% 
+  remove_rownames %>% column_to_rownames(var="Kalenderwoche")
+
+konsum_index <- apply(konsum_ch, 2, function(y) 100 * y / y[1])
+
+konsum_index <- as.data.frame(konsum_index)
+konsum_index <- rownames_to_column(konsum_index, "Kalenderwoche")
+
+```
+
+##### Grafiken erstellen
+
+```{r}
+
+# Daten zurück in Longformat umwandeln
+
+konsum_index_long <- konsum_index %>%
+  gather(`Genferseeregion`, `Mittelland`, `Nordwestschweiz`, `Zuerich`, `Ostschweiz`, `Zentralschweiz`, `Tessin`, `Schweiz`, key = "Region", value = "Index")
+
+# Grafik mit allen Regionen der Schweiz
+
+ggplot(konsum_index_long, aes(x=Kalenderwoche, y=Index, group=Region))+
+  geom_step(aes(color=Region),size = 0.8)+
+  scale_color_manual(values=c("#6ADC5E","#237739","#82B0BE","#36A953","#A5A5A5","#A0DCAF","#57DC79","#00B0F0"))+
+  theme_minimal()+
+  geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(legend.position = "bottom")+
+  labs(title = "Konsumindex (Detailhandel und Bargeldbezüge)",
+        subtitle = "Kartenzahlungen im Detailhandel und Bargeldbezüge, Index 100 = Mittelwert 2019",
+        caption = "Daten: https://monitoringconsumption.com/")
+
+# Grafik mit ausgewählten Regionen
+
+ konsum_index_long %>%
+  filter(Region == c("Schweiz","Zuerich")) %>%
+  ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
+  geom_step(aes(color=Region), size=1.2)+
+  scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
+  theme_minimal()+
+  geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(legend.position = "bottom")+
+  labs(title = "Konsumindex (Detailhandel und Bargeldbezüge)",
+        subtitle = "Kartenzahlungen im Detailhandel und Bargeldbezüge, Index 100 = Mittelwert 2019",
+        caption = "Daten: https://monitoringconsumption.com/")
+
+# Grafik mit Daten für das Jahr 2020
+
+konsum_index_long %>%
+  filter(Region == c("Schweiz","Zuerich")) %>%
+  filter(Kalenderwoche < "2021-01") %>%
+  ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
+  geom_step(aes(color=Region), size=1.2)+
+  scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
+  theme_minimal()+
+  geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(legend.position = "bottom")+
+  labs(title = "Konsumindex 2020 (Detailhandel und Bargeldbezüge)",
+        subtitle = "Kartenzahlungen im Detailhandel und Bargeldbezüge, Index 100 = Mittelwert 2019",
+        caption = "Daten: https://monitoringconsumption.com/")
+
+# Grafik mit Daten für das Jahr 2021
+
+konsum_index_long %>%
+  filter(Region == c("Schweiz","Zuerich")) %>%
+  filter(Kalenderwoche >= "2021-01") %>%
+  ggplot(aes(x=Kalenderwoche, y=Index, group=Region))+
+  geom_step(aes(color=Region), size=1.2)+
+  scale_color_manual(values=c("#A5A5A5","#00B0F0"))+
+  theme_minimal()+
+  geom_hline(yintercept = 100, color = "darkgray", size = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  theme(legend.position = "bottom")+
+  labs(title = "Konsumindex 2021 (Detailhandel und Bargeldbezüge)",
+        subtitle = "Kartenzahlungen im Detailhandel und Bargeldbezüge, Index 100 = Mittelwert 2019",
         caption = "Daten: https://monitoringconsumption.com/")
 
 ```
