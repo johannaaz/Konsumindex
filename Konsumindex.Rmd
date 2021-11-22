@@ -745,3 +745,7 @@ konsum_index_long %>%
         caption = "Daten: https://monitoringconsumption.com/")
 
 ```
+
+**Fragen an Lars:**  
+** Bei den letzten vier Grafiken sind die Linien irgendwie verschoben, obwohl ich den gleichen Code wie vorher verwendet habe.**  
+** Hast du eine Idee, woran das liegen könnte?**
